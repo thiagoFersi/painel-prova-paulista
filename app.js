@@ -1,8 +1,9 @@
 // Configuração e Conexão com o Supabase
-const SUPABASE_URL = "https://jjqrvczdrnexqxvnnvth.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_RhZSmn6hWuxGlDqAhTuO3A_ZQODbdng";
+const SUPABASE_URL = "https://jjqrvczdrnexqxvnvth.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_RhZSmn6hWuxG1DqAhTuO3A_ZQODbdng";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 // Função para realizar o login do utilizador
 async function fazerLogin(email, senha) {
   const { data, error } = await supabaseClient.auth.signInWithPassword({
@@ -18,6 +19,22 @@ async function fazerLogin(email, senha) {
 
   console.log("Login efetuado com sucesso!", data);
   return data;
+}
+
+// Função para obter o perfil do utilizador (admin ou usuario)
+async function obterPerfil(userId) {
+  const { data, error } = await supabaseClient
+    .from('perfis')
+    .select('perfil')
+    .eq('id', userId)
+    .single();
+
+  if (error) {
+    console.error("Erro ao obter perfil:", error.message);
+    return null;
+  }
+
+  return data ? data.perfil : null;
 }
 /* Lógica do painel: cálculos, gráficos, tabela e leitura de planilhas. Depende de js/data.js (DATA) e da biblioteca SheetJS (XLSX). */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
