@@ -36,7 +36,7 @@ async function obterPerfil(userId) {
 
   return data ? data.perfil : null;
 }
-// Conecta o formulário da página às funções de autenticação
+// Conecta o formulário da página às funções de autenticação e gestão de perfil
 document.addEventListener('DOMContentLoaded', () => {
   const formLogin = document.querySelector('form');
 
@@ -59,7 +59,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (resultado && resultado.user) {
         const perfil = await obterPerfil(resultado.user.id);
-        alert(`Login efetuado com sucesso! Perfil do utilizador: ${perfil}`);
+        
+        // Guarda o perfil localmente para controlo de acesso na interface
+        localStorage.setItem('usuario_perfil', perfil);
+        
+        if (perfil === 'admin') {
+          alert("Login efetuado! Acesso concedido como ADMINISTRADOR.");
+        } else {
+          alert("Login efetuado! Acesso concedido como USUÁRIO.");
+        }
+      }
+    });
+  }
+});
       }
     });
   }
