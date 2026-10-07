@@ -1,0 +1,15 @@
+{
+  "name": "painel-prova-paulista-alura",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Painel por escola da Prova Paulista e da avaliação Alura, com Supabase.",
+  "scripts": {
+    "config": "node scripts/generate-config.mjs",
+    "build": "node scripts/generate-config.mjs",
+    "dev": "npx --yes serve public -l 3000",
+    "check": "node --check public/js/config.js && node --check public/js/supabase.js && node --check public/js/dashboard.js && node --check public/js/admin.js && node --check public/js/main.js && node --check public/js/data.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
