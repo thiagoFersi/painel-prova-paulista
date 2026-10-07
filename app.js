@@ -1,3 +1,8 @@
+// Configuração e Conexão com o Supabase
+const SUPABASE_URL = "https://jjqrvczdrnexqxvnnvth.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_RhZSmn6hWuxGlDqAhTuO3A_ZQODbdng";
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 /* Lógica do painel: cálculos, gráficos, tabela e leitura de planilhas. Depende de js/data.js (DATA) e da biblioteca SheetJS (XLSX). */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 let BIM=[],PERIOD=[];
