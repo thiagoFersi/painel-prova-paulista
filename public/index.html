@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel Prova Paulista e Alura</title>
+<meta name="description" content="Resultados por escola da Prova Paulista (TEC) e da avaliação Alura, por bimestre.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="is-loading">
+<noscript>Este painel precisa de JavaScript para funcionar.</noscript>
+<div class="wrap">
+  <header class="head">
+    <div>
+      <h1>Prova Paulista e Avaliação Alura · Regional 2026</h1>
+      <p class="sub" id="sub">Análise por escola, 1º ao 3º bimestre. Prova Paulista medida pelo TEC, Alura pela média das avaliações mensais.</p>
+    </div>
+    <div class="stamp" id="stamp"></div>
+  </header>
+
+  <nav class="tabs" role="tablist" id="tabs" aria-label="Seções"><button role="tab" aria-selected="true" data-t="painel">Painel</button><button role="tab" aria-selected="false" data-t="dados">Atualizar dados · Admin</button></nav>
+
+<div class="boot" role="status">Carregando os dados publicados…</div>
+
+<div id="tabPainel" class="stack">
+  <div class="banner" id="bootWarn" role="status" hidden></div>
+  <section class="bar-ctl" aria-label="Filtros do painel">
+    <div class="ctl"><span class="lbl" id="l1">Período</span>
+      <div class="seg" role="group" aria-labelledby="l1" id="segPeriod">
+        <button data-v="0">1º Bim</button><button data-v="1">2º Bim</button><button data-v="2">3º Bim</button><button data-v="3">Acumulado</button></div></div>
+    <div class="ctl"><span class="lbl" id="l2">Indicador do ranking</span>
+      <div class="seg" role="group" aria-labelledby="l2" id="segInd">
+        <button data-v="pp">Prova Paulista (TEC)</button><button data-v="alu">Alura (média 0–10)</button></div></div>
+    <div class="ctl"><span class="lbl" id="l3">Recorte de escolas</span>
+      <div class="seg" role="group" aria-labelledby="l3" id="segCut">
+        <button data-v="all">Todas</button><button data-v="top">15 melhores</button><button data-v="bot">Prioritárias (15 piores)</button></div></div>
+  </section>
+
+  <section class="cards" id="cards" aria-label="Resumo"></section>
+
+  <section class="panel">
+    <div class="ph">
+      <div><h2 id="barTitle">Ranking por escola</h2><p id="barSub"></p></div>
+      <div class="legend" id="barLegend"></div>
+    </div>
+    <div class="bars" id="bars"></div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">
+      <div><h2>Evolução ao longo do ano</h2><p>Cada linha cinza é uma escola. Escolha uma escola para destacá-la contra a média da rede, ou clique numa barra ou linha da tabela.</p></div>
+      <div class="ctl"><label for="selSchool">Escola em foco</label><select id="selSchool"></select></div>
+    </div>
+    <div class="grid2">
+      <div>
+        <div class="ph" style="margin-bottom:6px"><div><h2 style="font-size:14px">Prova Paulista por bimestre</h2></div>
+          <div class="seg" role="group" aria-label="Medida da Prova Paulista" id="segPPM">
+            <button data-v="tec">TEC</button><button data-v="acertos">% Acertos</button><button data-v="part">% Participação</button></div></div>
+        <div class="legend" id="lg1" style="margin-bottom:6px"></div>
+        <div class="chart" id="chPP"></div>
+      </div>
+      <div>
+        <div class="ph" style="margin-bottom:6px"><div><h2 style="font-size:14px">Alura por avaliação mensal</h2><p>Duas avaliações por bimestre, nota de 0 a 10.</p></div></div>
+        <div class="legend" id="lg2" style="margin-bottom:6px"></div>
+        <div class="chart" id="chAlu"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">
+      <div><h2>Tabela por escola</h2><p id="tblSub"></p></div>
+      <div class="tools">
+        <div class="ctl"><label for="q">Escola</label><input type="search" id="q" placeholder="Buscar pelo nome ou código"></div>
+        <div class="ctl"><label for="st">Status</label>
+          <select id="st"><option value="all">Todos</option><option value="up">Avanço</option><option value="down">Queda</option><option value="flat">Estável</option><option value="nd">Sem comparativo</option></select></div>
+      </div>
+    </div>
+    <div class="tw"><table id="tbl"></table></div>
+  </section>
+
+  <p class="foot" id="foot"></p>
+</div>
+
+<section id="tabDados" class="stack" hidden>
+
+  <!-- 1) Supabase ainda não configurado -->
+  <div class="panel" id="adSetup" hidden>
+    <h2>Conexão com o Supabase pendente</h2>
+    <p class="m" id="setupWhy"></p>
+    <ol class="how">
+      <li>Crie um projeto em <b>supabase.com</b> e rode, no <b>SQL Editor</b>, os arquivos da pasta <code>supabase/</code> na ordem: <code>01_schema.sql</code>, <code>02_admin.sql</code> e <code>03_seed_dados_originais.sql</code>.</li>
+      <li>Em <b>Project Settings &gt; API</b>, copie a <b>Project URL</b> e a chave <b>anon public</b>.</li>
+      <li>Cole os dois valores em <code>public/js/config.js</code> (uso local) ou nas variáveis <code>SUPABASE_URL</code> e <code>SUPABASE_ANON_KEY</code> da Vercel.</li>
+      <li>Recarregue a página. O passo a passo completo está no <code>README.md</code>.</li>
+    </ol>
+  </div>
+
+  <!-- 2) Login do administrador -->
+  <div class="panel" id="adLogin" hidden>
+    <div class="ph"><div><h2>Acesso do administrador</h2><p>Entre com o e-mail e a senha criados no Supabase para atualizar os dados do painel.</p></div></div>
+    <form id="loginForm" class="loginForm">
+      <div class="ctl"><label for="adEmail">E-mail</label><input id="adEmail" type="email" autocomplete="username" required></div>
+      <div class="ctl"><label for="adPass">Senha</label><input id="adPass" type="password" autocomplete="current-password" required></div>
+      <button class="btn" type="submit" id="btnLogin">Entrar</button>
+    </form>
+    <div id="loginMsg" aria-live="polite"></div>
+  </div>
+
+  <!-- 3) Usuário sem permissão -->
+  <div class="panel" id="adDenied" hidden>
+    <h2>Este usuário não é administrador</h2>
+    <p>O usuário <b id="deniedUser"></b> entrou, mas não está na tabela <code>admins</code>. Peça para incluí-lo com o arquivo <code>supabase/02_admin.sql</code>.</p>
+    <button class="btn ghost js-logout" type="button">Sair</button>
+  </div>
+
+  <!-- 4) Área do administrador -->
+  <div id="adPanel" class="stack" hidden>
+    <div class="panel">
+      <div class="ph">
+        <div><h2>Atualizar com uma nova planilha</h2><p id="srcNow"></p></div>
+        <div class="adbar"><span>Administrador: <b id="adUser"></b></span><button class="btn ghost sm js-logout" type="button">Sair</button></div>
+      </div>
+      <label class="dz" id="dz" for="file"><b>Escolha o arquivo .xlsx ou arraste até aqui</b><span>O arquivo é lido no seu navegador. Só vai para o Supabase quando você clicar em Publicar.</span>
+        <input type="file" id="file" accept=".xlsx,.xls,.xlsm"></label>
+      <div id="upStatus" aria-live="polite"></div>
+      <div class="pubrow">
+        <div class="ctl"><label for="verLabel">Nome desta versão</label><input type="text" id="verLabel" maxlength="80" placeholder="Ex.: 4º bimestre"></div>
+        <button class="btn" id="btnApply" disabled>Publicar no painel</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Versões publicadas</h2>
+      <p class="m">A versão mais recente é a que aparece para todos. Você pode colocar uma versão antiga de volta no ar ou excluir versões que não quer mais.</p>
+      <div id="hist"></div>
+    </div>
+    <div class="panel">
+      <h2>Como preparar o arquivo do 4º bimestre</h2>
+      <ol class="how">
+        <li>Use a mesma planilha de hoje e acrescente os dados novos ao lado dos que já existem.</li>
+        <li>Na aba <b>Dados</b>, a linha 1 deve ter uma coluna "Escolas PP 4 BIM" seguida de "Total Alunos", "(%) Participação", "(%) Acertos" e "TEC". A linha "Total" é opcional.</li>
+        <li>Na aba <b>Avaliações</b>, acrescente os blocos "1ª AVALIAÇÃO - 4º BIM" e "2ª AVALIAÇÃO - 4º BIM", com as mesmas colunas dos bimestres anteriores.</li>
+        <li>Os nomes das escolas precisam ser iguais nas duas abas. As demais abas são ignoradas.</li>
+        <li>Clique em <b>Publicar no painel</b>. O painel de todos os visitantes passa a mostrar o 4º bimestre.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+<div class="tip" id="tip" hidden></div>
+
+<!-- Bibliotecas (CDN). Versões fixas. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<!-- Código do site: a ordem importa. -->
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/supabase.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
