@@ -36,6 +36,34 @@ async function obterPerfil(userId) {
 
   return data ? data.perfil : null;
 }
+// Conecta o formulário da página às funções de autenticação
+document.addEventListener('DOMContentLoaded', () => {
+  const formLogin = document.querySelector('form');
+
+  if (formLogin) {
+    formLogin.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const emailInput = document.querySelector('input[type="email"], input[name="email"]');
+      const senhaInput = document.querySelector('input[type="password"], input[name="password"]');
+
+      if (!emailInput || !senhaInput) {
+        alert("Campos de e-mail ou palavra-passe não encontrados.");
+        return;
+      }
+
+      const email = emailInput.value;
+      const senha = senhaInput.value;
+
+      const resultado = await fazerLogin(email, senha);
+
+      if (resultado && resultado.user) {
+        const perfil = await obterPerfil(resultado.user.id);
+        alert(`Login efetuado com sucesso! Perfil do utilizador: ${perfil}`);
+      }
+    });
+  }
+});
 /* Lógica do painel: cálculos, gráficos, tabela e leitura de planilhas. Depende de js/data.js (DATA) e da biblioteca SheetJS (XLSX). */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 let BIM=[],PERIOD=[];
