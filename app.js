@@ -3,6 +3,22 @@ const SUPABASE_URL = "https://jjqrvczdrnexqxvnnvth.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_RhZSmn6hWuxGlDqAhTuO3A_ZQODbdng";
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Função para realizar o login do utilizador
+async function fazerLogin(email, senha) {
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email: email,
+    password: senha,
+  });
+
+  if (error) {
+    console.error("Erro ao fazer login:", error.message);
+    alert("Erro ao fazer login: " + error.message);
+    return null;
+  }
+
+  console.log("Login efetuado com sucesso!", data);
+  return data;
+}
 /* Lógica do painel: cálculos, gráficos, tabela e leitura de planilhas. Depende de js/data.js (DATA) e da biblioteca SheetJS (XLSX). */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 let BIM=[],PERIOD=[];
