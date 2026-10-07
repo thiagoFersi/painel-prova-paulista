@@ -20,8 +20,8 @@
      os dados de js/data.js e a aba de administrador mostra as instruções.
    ===================================================================== */
 window.APP_CONFIG = {
-  SUPABASE_URL: "COLE_AQUI_A_PROJECT_URL",
-  SUPABASE_ANON_KEY: "COLE_AQUI_A_ANON_PUBLIC_KEY",
+  SUPABASE_URL: "https://jjqrvczdrnexqxvnnvth.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_RhZSmn6hWuxGlDqAhTuO3A_ZQODbdng",
 
   // Nome da tabela criada por supabase/01_schema.sql (não mude, a menos que mude o SQL).
   TABLE: "datasets",
